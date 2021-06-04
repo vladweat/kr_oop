@@ -91,5 +91,20 @@ def add_room():
             dbRoom.delete_room(index)
     return redirect(url_for('rooms_page'))
 
+@app.route('/workers', methods=['GET'])
+def workers_page():
+    dbWorker = WorkerDepDatabase()
+    return render_template('rooms.html', workers=dbWorker)
+
+@app.route('/add_worker', methods=['POST'])
+def add_worker():
+    dbWorker = WorkerDepDatabase()
+    if request.form["btn"] == "Add":
+        pass
+    if request.form["btn"] == "Change":
+        pass
+    if request.form["btn"] == "Delete":
+        pass
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -18,6 +18,7 @@ class Worker(Person):
 
     def __init__(self, first_name, last_name, still_working='no info'):
         super(Worker, self).__init__(first_name, last_name)
+        self.sys_worker_num = 1
         self.still_working = still_working
 
     def __call__(self, value):
@@ -31,9 +32,8 @@ class HeadDep(object):
     '''Класс HeadDep хранит информацию о руководителе'''
 
     def __init__(self, first_name, last_name, age=None, phone=None):
-        self.sys_worker_num = 1
         self.worker = Worker(first_name, last_name)
-        self.status = 'Head of department'
+        self.status = None
         self.age = age
         self.phone = phone
 
@@ -49,7 +49,7 @@ class RespDep(object):
 
     def __init__(self, first_name, last_name, age=None, phone=None):
         self.worker = Worker(first_name, last_name)
-        self.status = 'Resp of department'
+        self.status = None
         self.age = age
         self.phone = phone
 
@@ -393,14 +393,88 @@ class WorkerDepDatabase(object):
         self.database = dict(sorted(self.database.items()))
         self.save_database()
 
+    def add_resp_dep(self, first_name, last_name, age=None, phone=None):
+        resp_dep = RespDep(first_name, last_name, age, phone)
+        if len(self.database) != 0:
+            if len(self.database) != max(self.database.keys()):
+                if os.path.exists(self.deleted_index_filename):
+                    with open(self.deleted_index_filename, 'rb') as f:
+                        self.deleted_index = pickle.load(f)
+                min_index = min(self.deleted_index)
+                resp_dep.worker.sys_worker_num = min_index
+                self.deleted_index.remove(min_index)
+                with open(self.deleted_index_filename, 'wb') as f:
+                    pickle.dump(self.deleted_index, f)
+                f.closed
+        if resp_dep.worker.sys_worker_num in self.database:
+            resp_dep.worker.sys_worker_num = len(self.database) + 1
+        self.database[resp_dep.worker.sys_worker_num] = resp_dep
+        self.database = dict(sorted(self.database.items()))
+        self.save_database()
 
+    def get_worker_by_index(self, index):
+        if index not in self.database:
+            return None
+        return self.database[index]
 
+    def delete_worker(self, index):
+        if isinstance(index, str):
+            index = int(index)
+        if index in self.database:
+            del self.database[index]
+            if os.path.exists(self.deleted_index_filename):
+                with open(self.deleted_index_filename, 'rb') as f:
+                    self.deleted_index = pickle.load(f)
+            self.deleted_index.append(index)
+            with open(self.deleted_index_filename, 'wb') as f:
+                pickle.dump(self.deleted_index, f)
+            f.closed
+            self.save_database()
 
+    def change_first_name(self, index, first_name):
+        if isinstance(index, str):
+            index = int(index)
+        worker = self.get_worker_by_index(index)
+        if not worker:
+            return
+        worker.first_name = first_name
+        self.save_database()
 
+    def change_last_name(self, index, last_name):
+        if isinstance(index, str):
+            index = int(index)
+        worker = self.get_worker_by_index(index)
+        if not worker:
+            return
+        worker.last_name = last_name
+        self.save_database()
 
+    def change_status(self, index, status):
+        if isinstance(index, str):
+            index = int(index)
+        worker = self.get_worker_by_index(index)
+        if not worker:
+            return
+        worker.status = status
+        self.save_database()
 
+    def change_age(self, index, age):
+        if isinstance(index, str):
+            index = int(index)
+        worker = self.get_worker_by_index(index)
+        if not worker:
+            return
+        worker.age = age
+        self.save_database()
 
-
+    def change_phone(self, index, phone):
+        if isinstance(index, str):
+            index = int(index)
+        worker = self.get_worker_by_index(index)
+        if not worker:
+            return
+        worker.phone = phone
+        self.save_database()
 
 
 
