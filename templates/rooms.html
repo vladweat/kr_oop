@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Управление комнатами</title>
+</head>
+<body>
+<h1 align="center">Сервис управления списком комнат</h1>
+<p>Об - обязательно к заполнению</p>
+
+<form method="post" action="/add_room">
+    <table>
+        <tr>
+            <td><p style="color: red"> Номер комнаты (об)</p></td>
+            <td><p> Подразделение</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="a_room_num"></td>
+            <td><input type="text" name="a_department"></td>
+            <td><button type="submit" name="btn" value="Add"> Добавить комнату </button></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td><p style="color: red"> ID (об)</p></td>
+            <td><p> Номер комнаты </p></td>
+            <td><p> Подразделение</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="c_sys_room_num"></td>
+            <td><input type="text" name="c_room_num"></td>
+            <td><input type="text" name="c_department"></td>
+            <td><button type="submit" name="btn" value="Change"> Изменить </button></td>
+            <td><button type="submit" name="btn" value="Delete"> Удалить по ID </button></td>
+        </tr>
+    </table>
+
+    <h2>Список комнат</h2>
+
+    <table border="1" width="100%">
+        <tr>
+            <td><p>ID</p></td>
+            <td><p>Номер комнаты</p></td>
+            <td><p>Департамент</p></td>
+        </tr>
+        {% for r in rooms %}
+        <div>
+            <tr>
+                <td>{{ r.sys_room_num }}</td>
+                <td>{{ r.room_num }}</td>
+                <td>{{ r.department }}</td>
+            </tr>
+        </div>
+        {% endfor %}
+    </table>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Управление техникой</title>
+</head>
+<body>
+<h1 align="center">Сервис управления списками техники</h1>
+<p>Об - обязательно к заполнению</p>
+<form method="post" action="/add_tech">
+    <table>
+        <tr>
+            <td><p style="color: red"> Инвентарный номер (об)</p></td>
+            <td><p style="color: red"> Наименование (об)</p></td>
+            <td><p style="color: red"> Модель (об)</p></td>
+            <td><p> Дата покупки</p></td>
+            <td><p> Местоположение</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="add_inp_inventory_num"></td>
+            <td><input type="text" name="add_inp_name"></td>
+            <td><input type="text" name="add_inp_model"></td>
+            <td><input type="text" name="add_inp_date"></td>
+
+            <td><select name="add_inp_location">
+                <option>Пусто</option>
+                {% for r in rooms%}
+                <option>{{ r.room_num }} - {{ r.department }}</option>
+                {% endfor %}
+            </select></td>
+
+            <td><button type="submit" name="btn" value="Add"> Добавить технику</button></td>
+        </tr>
+        <tr>
+            <td><p style="color: red"> ID (об)</p></td>
+            <td><p> Инвентарный номер</p></td>
+            <td><p> Наименование</p></td>
+            <td><p> Модель</p></td>
+            <td><p> Дата</p></td>
+            <td><p> Местоположение</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="chg_inp_id"></td>
+            <td><input type="text" name="chg_inp_inv_num"></td>
+            <td><input type="text" name="chg_inp_name"></td>
+            <td><input type="text" name="chg_inp_model"></td>
+            <td><input type="text" name="chg_inp_date"></td>
+            <td><input type="text" name="chg_inp_location"></td>
+            <td><button type="submit" name="btn" value="Change"> Изменить</button></td>
+            <td><button type="submit" name="btn" value="Delete"> Удалить по ID </button></td>
+        </tr>
+    </table>
+
+    <h2>Список техники</h2>
+
+    <table border="1" width="100%">
+
+        <tr>
+            <td><p>ID</p></td>
+            <td><p>Инв. номер</p></td>
+            <td><p>Наименование</p></td>
+            <td><p>Модель</p></td>
+            <td><p>Дата покупки</p></td>
+            <td><p>Местоположение</p></td>
+        </tr>
+
+        {% for t in techs %}
+        <div>
+            <tr>
+                <td>{{ t.sys_tech_num }}</td>
+                <td>{{ t.inventory_num }}</td>
+                <td>{{ t.name }}</td>
+                <td>{{ t.model }}</td>
+                <td>{{ t.date_of_purchase }}</td>
+                <td>{{ t.current_location }}</td>
+            </tr>
+        </div>
+        {% endfor %}
+
+    </table>
+
+</form>
+
+
+</body>
+</html>
