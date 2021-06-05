@@ -94,17 +94,50 @@ def add_room():
 @app.route('/workers', methods=['GET'])
 def workers_page():
     dbWorker = WorkerDepDatabase()
-    return render_template('rooms.html', workers=dbWorker)
+    return render_template('workers.html', workers=dbWorker)
 
 @app.route('/add_worker', methods=['POST'])
 def add_worker():
     dbWorker = WorkerDepDatabase()
     if request.form["btn"] == "Add":
-        pass
+        a_first_name = request.form['a_first_name']
+        a_last_name = request.form['a_last_name']
+        a_status = request.form['a_status']
+        a_age = request.form['a_age']
+        a_phone = request.form['a_phone']
+
+        if a_status == 'Head':
+            dbWorker.add_head_dep(a_first_name, a_last_name, a_status, a_age, a_phone)
+
+        if a_status == 'Resp':
+            dbWorker.add_resp_dep(a_first_name, a_last_name, a_status, a_age, a_phone)
+
+
     if request.form["btn"] == "Change":
-        pass
+        index = request.form['c_worker_num']
+        c_first_name = request.form['c_first_name']
+        c_last_name = request.form['c_last_name']
+        c_status = request.form['c_status']
+        c_age = request.form['c_age']
+        c_phone = request.form['c_phone']
+
+        if index != '' and index.isdigit():
+            if c_first_name != '':
+                dbWorker.change_first_name(index, c_first_name)
+            if c_last_name != '':
+                dbWorker.change_last_name(index, c_last_name)
+            if c_status != '':
+                dbWorker.change_status(index, c_status)
+            if c_age != '':
+                dbWorker.change_age(index, c_age)
+            if c_phone != '':
+                dbWorker.change_age(index, c_phone)
+
     if request.form["btn"] == "Delete":
-        pass
+        index = request.form['c_worker_num']
+        if index != '' and index.isdigit():
+            dbWorker.delete_worker(index)
+    return redirect(url_for('workers_page'))
 
 if __name__ == '__main__':
     app.run(debug=True)

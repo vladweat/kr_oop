@@ -31,9 +31,9 @@ class Worker(Person):
 class HeadDep(object):
     '''Класс HeadDep хранит информацию о руководителе'''
 
-    def __init__(self, first_name, last_name, age=None, phone=None):
+    def __init__(self, first_name, last_name, status=None, age=None, phone=None):
         self.worker = Worker(first_name, last_name)
-        self.status = None
+        self.status = status
         self.age = age
         self.phone = phone
 
@@ -47,9 +47,9 @@ class HeadDep(object):
 class RespDep(object):
     '''Класс RespDep хранит информацию о материально ответственном лице'''
 
-    def __init__(self, first_name, last_name, age=None, phone=None):
+    def __init__(self, first_name, last_name, status=None, age=None, phone=None):
         self.worker = Worker(first_name, last_name)
-        self.status = None
+        self.status = status
         self.age = age
         self.phone = phone
 
@@ -340,6 +340,7 @@ class RoomDatabase(object):
         room.department = department
         self.save_database()
 
+
 class WorkerDepDatabase(object):
     def __init__(self):
         self.filename = db_folder + '/' + 'workers.pkl'
@@ -347,6 +348,12 @@ class WorkerDepDatabase(object):
         self.index = 0
         self.deleted_index = []
         self.deleted_index_filename = db_folder + '/' + 'deleted_indexes_workers.pkl'
+        try:
+            self.open_database()
+        except:
+            self.save_database()
+            if os.path.exists(self.deleted_index_filename):
+                os.remove(self.deleted_index_filename)
 
     def __iter__(self):
         for item in self.database:
@@ -374,8 +381,8 @@ class WorkerDepDatabase(object):
             pickle.dump(self.database, f)
         f.closed
 
-    def add_head_dep(self, first_name, last_name, age=None, phone=None):
-        head_dep = HeadDep(first_name, last_name, age, phone)
+    def add_head_dep(self, first_name, last_name, status=None, age=None, phone=None):
+        head_dep = HeadDep(first_name, last_name, status, age, phone)
         if len(self.database) != 0:
             if len(self.database) != max(self.database.keys()):
                 if os.path.exists(self.deleted_index_filename):
@@ -393,8 +400,8 @@ class WorkerDepDatabase(object):
         self.database = dict(sorted(self.database.items()))
         self.save_database()
 
-    def add_resp_dep(self, first_name, last_name, age=None, phone=None):
-        resp_dep = RespDep(first_name, last_name, age, phone)
+    def add_resp_dep(self, first_name, last_name, status=None, age=None, phone=None):
+        resp_dep = RespDep(first_name, last_name, status, age, phone)
         if len(self.database) != 0:
             if len(self.database) != max(self.database.keys()):
                 if os.path.exists(self.deleted_index_filename):
@@ -437,7 +444,7 @@ class WorkerDepDatabase(object):
         worker = self.get_worker_by_index(index)
         if not worker:
             return
-        worker.first_name = first_name
+        worker.worker.first_name = first_name
         self.save_database()
 
     def change_last_name(self, index, last_name):
@@ -446,7 +453,7 @@ class WorkerDepDatabase(object):
         worker = self.get_worker_by_index(index)
         if not worker:
             return
-        worker.last_name = last_name
+        worker.worker.last_name = last_name
         self.save_database()
 
     def change_status(self, index, status):
@@ -475,9 +482,6 @@ class WorkerDepDatabase(object):
             return
         worker.phone = phone
         self.save_database()
-
-
-
 
 
 if __name__ == '__main__':

@@ -21,6 +21,7 @@
             <td><input type="text" name="a_first_name"></td>
             <td><input type="text" name="a_last_name"></td>
             <td><select name="a_status">
+                <option>Не указано</option>
                 <option>Head</option>
                 <option>Resp</option>
             </select></td>
@@ -43,11 +44,15 @@
             <td><input type="text" name="c_worker_num"></td>
             <td><input type="text" name="c_first_name"></td>
             <td><input type="text" name="c_last_name"></td>
-            <td><input type="text" name="c_status"></td>
+            <td><select name="с_status">
+                <option>Не указано</option>
+                <option>Head</option>
+                <option>Resp</option>
+            </select></td>
             <td><input type="text" name="c_age"></td>
             <td><input type="text" name="c_phone"></td>
-
-        </tr>
+            <td><button type="submit" name="btn" value="Change"> Изменить </button></td>
+            <td><button type="submit" name="btn" value="Delete"> Удалить по ID </button></td>        </tr>
     </table>
 
     <h2>Список работников</h2>
@@ -64,9 +69,9 @@
         {% for w in workers %}
         <div>
             <tr>
-                <td>{{ w.sys_worker_num }}</td>
-                <td>{{ w.first_name }}</td>
-                <td>{{ w.last_name }}</td>
+                <td>{{ w.worker.sys_worker_num }}</td>
+                <td>{{ w.worker.first_name }}</td>
+                <td>{{ w.worker.last_name }}</td>
                 <td>{{ w.status }}</td>
                 <td>{{ w.age }}</td>
                 <td>{{ w.phone }}</td>
