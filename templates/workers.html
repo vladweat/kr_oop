@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Управление сотрудниками</title>
+</head>
+<body>
+<h1 align="center">Сервис управления списком сотрудников</h1>
+<p>Об - обязательно к заполнению</p>
+
+<form method="post" action="/add_worker">
+
+    <table>
+        <tr>
+            <td><p style="color: red"> Имя (об)</p></td>
+            <td><p style="color: red"> Фамиллия (об)</p></td>
+            <td><p> Статус</p></td>
+            <td><p> Возраст</p></td>
+            <td><p> Телефон</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="a_first_name"></td>
+            <td><input type="text" name="a_last_name"></td>
+            <td><select name="a_status">
+                <option>Head</option>
+                <option>Resp</option>
+            </select></td>
+            <td><input type="text" name="a_age"></td>
+            <td><input type="text" name="a_phone"></td>
+            <td><button type="submit" name="btn" value="Add"> Добавить рабочего</button></td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td><p style="color: red"> ID (об)</p></td>
+            <td><p> Имя</p></td>
+            <td><p> Фамиллия</p></td>
+            <td><p> Статус</p></td>
+            <td><p> Возраст</p></td>
+            <td><p> Телефон</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="c_worker_num"></td>
+            <td><input type="text" name="c_first_name"></td>
+            <td><input type="text" name="c_last_name"></td>
+            <td><input type="text" name="c_status"></td>
+            <td><input type="text" name="c_age"></td>
+            <td><input type="text" name="c_phone"></td>
+
+        </tr>
+    </table>
+
+    <h2>Список работников</h2>
+
+    <table border="1" width="100%">
+        <tr>
+            <td>ID</td>
+            <td>Имя</td>
+            <td>Фамилия</td>
+            <td>Статус</td>
+            <td>Возраст</td>
+            <td>Телефон</td>
+        </tr>
+        {% for w in workers %}
+        <div>
+            <tr>
+                <td>{{ w.sys_worker_num }}</td>
+                <td>{{ w.first_name }}</td>
+                <td>{{ w.last_name }}</td>
+                <td>{{ w.status }}</td>
+                <td>{{ w.age }}</td>
+                <td>{{ w.phone }}</td>
+            </tr>
+        </div>
+        {% endfor %}
+    </table>
+
+</form>
+
+</body>
+</html>
