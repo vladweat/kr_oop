@@ -106,7 +106,7 @@ class Department(object):
 class Transaction(object):
     '''Класс Transaction хранит информацию о перемещении техники'''
 
-    def __init__(self, new_location, old_location, tech, new_resp, date=None):
+    def __init__(self, new_location=None, old_location=None, tech=None, new_resp=None, date=None):
         self.transaction_num = 1
         self.new_location = new_location
         self.old_location = old_location
@@ -484,12 +484,260 @@ class WorkerDepDatabase(object):
         self.save_database()
 
 
-if __name__ == '__main__':
-    head = HeadDep(first_name='Ivan', last_name='Ivanov', age=35, phone='456544')
-    resp = RespDep(first_name='Ivan', last_name='Ivanov', phone='456544')
-    department = Department(1, 'dep1', 'department1', head.worker.first_name, resp.worker.last_name)
+class DepartmentDatabase(object):
+    def __init__(self):
+        self.filename = db_folder + '/' + 'departments.pkl'
+        self.database = {}
+        self.index = 0
+        self.deleted_index = []
+        self.deleted_index_filename = db_folder + '/' + 'deleted_indexes_departments.pkl'
+        try:
+            self.open_database()
+        except:
+            self.save_database()
+            if os.path.exists(self.deleted_index_filename):
+                os.remove(self.deleted_index_filename)
 
-    print(head.__doc__)
+    def __iter__(self):
+        for item in self.database:
+            yield self.database[item]
+
+    def next(self):
+        if self.index == len(self.database):
+            raise StopIteration
+        self.index = self.index + 1
+        return self.database[self.index]
+
+    def prev(self):
+        if self.index == 0:
+            raise StopIteration
+        self.index = self.index - 1
+        return self.database[self.index]
+
+    def open_database(self):
+        with open(self.filename, 'rb') as f:
+            self.database = pickle.load(f)
+        f.closed
+
+    def save_database(self):
+        with open(self.filename, 'wb') as f:
+            pickle.dump(self.database, f)
+        f.closed
+
+    def add_department(self, department_num, short_name, long_name, head=None, material_resp=None):
+        department = Department(department_num, short_name, long_name, head, material_resp)
+        if len(self.database) != 0:
+            if len(self.database) != max(self.database.keys()):
+                if os.path.exists(self.deleted_index_filename):
+                    with open(self.deleted_index_filename, 'rb') as f:
+                        self.deleted_index = pickle.load(f)
+                min_index = min(self.deleted_index)
+                department.sys_department_num = min_index
+                self.deleted_index.remove(min_index)
+                with open(self.deleted_index_filename, 'wb') as f:
+                    pickle.dump(self.deleted_index, f)
+                f.closed
+        if department.sys_department_num in self.database:
+            department.sys_department_num = len(self.database) + 1
+        self.database[department.sys_department_num] = department
+        self.database = dict(sorted(self.database.items()))
+        self.save_database()
+
+    def get_department_by_index(self, index):
+        if index not in self.database:
+            return None
+        return self.database[index]
+
+    def delete_department(self, index):
+        if isinstance(index, str):
+            index = int(index)
+        if index in self.database:
+            del self.database[index]
+            if os.path.exists(self.deleted_index_filename):
+                with open(self.deleted_index_filename, 'rb') as f:
+                    self.deleted_index = pickle.load(f)
+            self.deleted_index.append(index)
+            with open(self.deleted_index_filename, 'wb') as f:
+                pickle.dump(self.deleted_index, f)
+            f.closed
+            self.save_database()
+
+    def change_department_num(self, index, num):
+        if isinstance(index, str):
+            index = int(index)
+        department = self.get_department_by_index(index)
+        if not department:
+            return
+        department.department_num = num
+        self.save_database()
+
+    def change_short_name(self, index, short_name):
+        if isinstance(index, str):
+            index = int(index)
+        department = self.get_department_by_index(index)
+        if not department:
+            return
+        department.short_name = short_name
+        self.save_database()
+
+    def change_long_name(self, index, long_name):
+        if isinstance(index, str):
+            index = int(index)
+        department = self.get_department_by_index(index)
+        if not department:
+            return
+        department.long_name = long_name
+        self.save_database()
+
+    def change_head(self, index, head):
+        if isinstance(index, str):
+            index = int(index)
+        department = self.get_department_by_index(index)
+        if not department:
+            return
+        department.head = head
+        self.save_database()
+
+    def change_material_resp(self, index, material_resp):
+        if isinstance(index, str):
+            index = int(index)
+        department = self.get_department_by_index(index)
+        if not department:
+            return
+        department.material_resp = material_resp
+        self.save_database()
+
+
+class TransactionDatabase(object):
+    def __init__(self):
+        self.filename = db_folder + '/' + 'transactions.pkl'
+        self.database = {}
+        self.index = 0
+        self.deleted_index = []
+        self.deleted_index_filename = db_folder + '/' + 'deleted_indexes_transactions.pkl'
+        try:
+            self.open_database()
+        except:
+            self.save_database()
+            if os.path.exists(self.deleted_index_filename):
+                os.remove(self.deleted_index_filename)
+
+    def __iter__(self):
+        for item in self.database:
+            yield self.database[item]
+
+    def next(self):
+        if self.index == len(self.database):
+            raise StopIteration
+        self.index = self.index + 1
+        return self.database[self.index]
+
+    def prev(self):
+        if self.index == 0:
+            raise StopIteration
+        self.index = self.index - 1
+        return self.database[self.index]
+
+    def open_database(self):
+        with open(self.filename, 'rb') as f:
+            self.database = pickle.load(f)
+        f.closed
+
+    def save_database(self):
+        with open(self.filename, 'wb') as f:
+            pickle.dump(self.database, f)
+        f.closed
+
+    def add_transactions(self, new_location=None, old_location=None, tech=None, new_resp=None, date=None):
+        transaction = Transaction(new_location, old_location, tech, new_resp, date)
+        if len(self.database) != 0:
+            if len(self.database) != max(self.database.keys()):
+                if os.path.exists(self.deleted_index_filename):
+                    with open(self.deleted_index_filename, 'rb') as f:
+                        self.deleted_index = pickle.load(f)
+                min_index = min(self.deleted_index)
+                transaction.transaction_num = min_index
+                self.deleted_index.remove(min_index)
+                with open(self.deleted_index_filename, 'wb') as f:
+                    pickle.dump(self.deleted_index, f)
+                f.closed
+        if transaction.transaction_num in self.database:
+            transaction.transaction_num = len(self.database) + 1
+        self.database[transaction.transaction_num] = transaction
+        self.database = dict(sorted(self.database.items()))
+        self.save_database()
+
+    def get_department_by_index(self, index):
+        if index not in self.database:
+            return None
+        return self.database[index]
+
+    def delete_transaction(self, index):
+        if isinstance(index, str):
+            index = int(index)
+        if index in self.database:
+            del self.database[index]
+            if os.path.exists(self.deleted_index_filename):
+                with open(self.deleted_index_filename, 'rb') as f:
+                    self.deleted_index = pickle.load(f)
+            self.deleted_index.append(index)
+            with open(self.deleted_index_filename, 'wb') as f:
+                pickle.dump(self.deleted_index, f)
+            f.closed
+            self.save_database()
+
+    def change_new_location(self, index, new_location):
+        if isinstance(index, str):
+            index = int(index)
+        transaction = self.get_department_by_index(index)
+        if not transaction:
+            return
+        transaction.new_location = new_location
+        self.save_database()
+
+    def change_old_location(self, index, old_location):
+        if isinstance(index, str):
+            index = int(index)
+        transaction = self.get_department_by_index(index)
+        if not transaction:
+            return
+        transaction.old_location = old_location
+        self.save_database()
+
+    def change_tech(self, index, tech):
+        if isinstance(index, str):
+            index = int(index)
+        transaction = self.get_department_by_index(index)
+        if not transaction:
+            return
+        transaction.tech = tech
+        self.save_database()
+
+    def change_new_resp(self, index, new_resp):
+        if isinstance(index, str):
+            index = int(index)
+        transaction = self.get_department_by_index(index)
+        if not transaction:
+            return
+        transaction.new_resp = new_resp
+        self.save_database()
+
+    def change_date(self, index, date):
+        if isinstance(index, str):
+            index = int(index)
+        transaction = self.get_department_by_index(index)
+        if not transaction:
+            return
+        transaction.date = date
+        self.save_database()
+
+if __name__ == '__main__':
+    pass
+    # head123 = HeadDep(first_name='Ivan', last_name='Ivanov', age=35, phone='456544')
+    # resp123 = RespDep(first_name='Ivan', last_name='Ivanov', phone='456544')
+    # department123 = Department(1, 'dep1', 'department1', head123.worker.first_name, resp123.worker.last_name)
+    #
+    # print(head123.__doc__)
 
     # dbT = TechDatabase()
     # dbT.add_tech('111', 'name1', 'v1', current_location=department)

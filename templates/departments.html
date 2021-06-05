@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Управление департаментами</title>
+</head>
+<body>
+<h1 align="center">Сервис управления списком департаментами</h1>
+<p>Об - обязательно к заполнению</p>
+
+<form method="post" action="/add_department">
+
+    <table>
+        <tr>
+            <td><p style="color: red"> Номер департамента (об)</p></td>
+            <td><p style="color: red"> Короткое имя (об)</p></td>
+            <td><p style="color: red"> Полное имя (об)</p></td>
+            <td><p> Начальник</p></td>
+            <td><p> Материально ответственный</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="a_department_num"></td>
+            <td><input type="text" name="a_short_name"></td>
+            <td><input type="text" name="a_long_name"></td>
+
+            <td>
+                <select name="a_head">
+                    <option></option>
+                    {% for w in workers %}
+                        {% if w.status == 'Head' %}
+                        <option>{{ w.worker.first_name }} {{ w.worker.last_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                <select name="a_resp">
+                    <option></option>
+                    {% for w in workers %}
+                        {% if w.status == 'Resp' %}
+                        <option width="40px">{{ w.worker.first_name }} {{ w.worker.last_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+            <td><button type="submit" name="btn" value="Add"> Добавить департамент </button></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td><p style="color: red"> ID (об)</p></td>
+            <td><p> Номер департамента</p></td>
+            <td><p> Короткое имя</p></td>
+            <td><p> Полное имя</p></td>
+            <td><p> Начальник</p></td>
+            <td><p> Материально ответственный</p></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="c_index"></td>
+            <td><input type="text" name="c_department_num"></td>
+            <td><input type="text" name="c_short_name"></td>
+            <td><input type="text" name="c_long_name"></td>
+
+            <td>
+                <select name="c_head">
+                    <option></option>
+                    {% for w in workers %}
+                        {% if w.status == 'Head' %}
+                        <option>{{ w.worker.first_name }} {{ w.worker.last_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                <select name="c_resp">
+                    <option></option>
+                    {% for w in workers %}
+                        {% if w.status == 'Resp' %}
+                        <option width="40px">{{ w.worker.first_name }} {{ w.worker.last_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td><button type="submit" name="btn" value="Change"> Изменить </button></td>
+            <td><button type="submit" name="btn" value="Delete"> Удалить по ID </button></td>
+        </tr>
+    </table>
+
+    <h2>Список департаментов</h2>
+
+    <table border="1" width="100%">
+        <tr>
+            <td><p>ID</p></td>
+            <td><p> Номер департамента</p></td>
+            <td><p> Короткое имя</p></td>
+            <td><p> Полное имя</p></td>
+            <td><p> Начальник</p></td>
+            <td><p> Материально ответственный</p></td>
+        </tr>
+        {% for d in departments %}
+            <div>
+                <tr>
+                    <td>{{ d.sys_department_num }}</td>
+                    <td>{{ d.department_num }}</td>
+                    <td>{{ d.short_name }}</td>
+                    <td>{{ d.long_name }}</td>
+                    <td>{{ d.head }}</td>
+                    <td>{{ d.material_resp }}</td>
+                </tr>
+            </div>
+        {% endfor %}
+    </table>
+    <h2>Список работников</h2>
+
+    <table border="1" width="100%">
+        <tr>
+            <td>ID</td>
+            <td>Имя</td>
+            <td>Фамилия</td>
+            <td>Статус</td>
+            <td>Возраст</td>
+            <td>Телефон</td>
+        </tr>
+        {% for w in workers %}
+        <div>
+            <tr>
+                <td>{{ w.worker.sys_worker_num }}</td>
+                <td>{{ w.worker.first_name }}</td>
+                <td>{{ w.worker.last_name }}</td>
+                <td>{{ w.status }}</td>
+                <td>{{ w.age }}</td>
+                <td>{{ w.phone }}</td>
+            </tr>
+        </div>
+        {% endfor %}
+    </table>
+</form>
+
+
+</body>
+</html>

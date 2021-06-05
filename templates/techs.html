@@ -79,6 +79,25 @@
 
     </table>
 
+    <h2>Список комнат</h2>
+
+    <table border="1" width="100%">
+        <tr>
+            <td><p>ID</p></td>
+            <td><p>Номер комнаты</p></td>
+            <td><p>Департамент</p></td>
+        </tr>
+        {% for r in rooms %}
+        <div>
+            <tr>
+                <td>{{ r.sys_room_num }}</td>
+                <td>{{ r.room_num }}</td>
+                <td>{{ r.department }}</td>
+            </tr>
+        </div>
+        {% endfor %}
+    </table>
+
 </form>
 
 

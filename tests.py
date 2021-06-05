@@ -38,22 +38,40 @@ import unittest
 #         for r in self.dbR:
 #             print(r.sys_room_num, r.room_num, r.department, r.list_of_tech)
 
-class TestAddWorker(unittest.TestCase):
+# class TestAddWorker(unittest.TestCase):
+#
+#     def setUp(self):
+#         self.dbW = WorkerDepDatabase()
+#         self.dbW.add_head_dep('ivan', 'ivanovixh', 'Head')
+#         self.dbW.add_head_dep('ivan', 'ivanovixh', 'Resp')
+#
+#     def test_add_workers(self):
+#         for w in self.dbW:
+#             print(w.worker.sys_worker_num, w.worker.first_name, w.worker.last_name, w.status, w.age, w.phone)
+#
+#         # self.dbW.change_first_name(1, 'Andrey')
+#         # self.dbW.delete_worker(2)
+#         for w in self.dbW:
+#             print(w.worker.sys_worker_num, w.worker.first_name, w.worker.last_name, w.status, w.age, w.phone)
 
+# class TestAddDepartment(unittest.TestCase):
+#     def setUp(self):
+#         self.dbD = DepartmentDatabase()
+#         self.dbD.add_department(2, 'Dep2', 'Department1')
+#         self.dbD.add_department(3, 'Dep3', 'Department1')
+#
+#     def test_add_workers(self):
+#         for d in self.dbD:
+#             print(d.sys_department_num, d.department_num, d.short_name, d.long_name, d.head, d.material_resp)
+
+class TestAddTransaction(unittest.TestCase):
     def setUp(self):
-        self.dbW = WorkerDepDatabase()
-        self.dbW.add_head_dep('ivan', 'ivanovixh', 'Head')
-        self.dbW.add_head_dep('ivan', 'ivanovixh', 'Resp')
+        self.dbT = TransactionDatabase()
+        self.dbT.add_transactions('dep1', 'dep2', 'tech1', 'resp1')
 
     def test_add_workers(self):
-        for w in self.dbW:
-            print(w.worker.sys_worker_num, w.worker.first_name, w.worker.last_name, w.status, w.age, w.phone)
-
-        # self.dbW.change_first_name(1, 'Andrey')
-        # self.dbW.delete_worker(2)
-        for w in self.dbW:
-            print(w.worker.sys_worker_num, w.worker.first_name, w.worker.last_name, w.status, w.age, w.phone)
-
+        for t in self.dbT:
+            print(t.transaction_num, t.new_location, t.old_location, t.tech, t.new_resp, t.date)
 
 if __name__ == '__main__':
     unittest.main()
